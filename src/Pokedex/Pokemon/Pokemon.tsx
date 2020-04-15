@@ -3,7 +3,7 @@ import { gql, useQuery } from "@apollo/client";
 import Title, { fragment as TitleFragment } from "./Title";
 import Dimensions, { fragment as DimensionsFragment } from "./Dimensions";
 import SpecialAttack, {
-  fragment as SpecialAttackFragment
+  fragment as SpecialAttackFragment,
 } from "./SpecialAttack";
 
 const POKEMON_QUERY = gql`
@@ -37,35 +37,38 @@ const Pokemon: React.FC<{ name: string }> = ({ name }) => {
     return null;
   }
 
-  const {
-    height,
-    weight,
-    attacks: { special: specialAttacks }
-  } = data.pokemon;
-
   return (
     <dl>
       <dt>Name (#)</dt>
       <dd>
-        <Title {...data.pokemon} />
+        <Title name={data.pokemon.name} number={data.pokemon.number} />
       </dd>
 
       <dt>height</dt>
       <dd>
-        <Dimensions {...height} />
+        <Dimensions
+          minimum={data.pokemon.height.minimum}
+          maximum={data.pokemon.height.maximum}
+        />
       </dd>
 
       <dt>weight</dt>
       <dd>
-        <Dimensions {...weight} />
+        <Dimensions
+          minimum={data.pokemon.weight.minimum}
+          maximum={data.pokemon.weight.maximum}
+        />
       </dd>
 
       <dt>special attacks:</dt>
       <dd>
         <ul>
-          {specialAttacks.map((specialAttack: any) => (
+          {data.pokemon.attacks.special.map((specialAttack: any) => (
             <li key={specialAttack.name}>
-              <SpecialAttack {...specialAttack} />
+              <SpecialAttack
+                name={specialAttack.name}
+                type={specialAttack.type}
+              />
             </li>
           ))}
         </ul>
