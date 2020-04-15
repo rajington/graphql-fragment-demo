@@ -1,6 +1,7 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
 import Dimensions from "./Dimensions";
+import SpecialAttack from "./SpecialAttack";
 
 const POKEMON_QUERY = gql`
   query Pokemon($name: String!) {
@@ -59,8 +60,12 @@ const Pokemon: React.FC<{ name: string }> = ({ name }) => {
       <dd>
         <ul>
           {specialAttacks.map((specialAttack: any) => (
-            <li key={specialAttack.name}>
-              {specialAttack.name} ({specialAttack.type})
+            <li>
+              <SpecialAttack
+                key={specialAttack.name}
+                name={specialAttack.name}
+                type={specialAttack.type}
+              />
             </li>
           ))}
         </ul>

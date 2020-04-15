@@ -1,6 +1,6 @@
 import React from "react";
 
-const Pokemon: React.FC<{ minimum: string; maximum: string }> = ({
+const Dimensions: React.FC<{ minimum: string; maximum: string }> = ({
   minimum,
   maximum
 }) => (
@@ -9,4 +9,4 @@ const Pokemon: React.FC<{ minimum: string; maximum: string }> = ({
   </>
 );
 
-export default Pokemon;
+export default Dimensions;
