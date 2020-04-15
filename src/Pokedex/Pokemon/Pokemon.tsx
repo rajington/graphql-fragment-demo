@@ -1,5 +1,6 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
+import Title, { fragment as TitleFragment } from "./Title";
 import Dimensions, { fragment as DimensionsFragment } from "./Dimensions";
 import SpecialAttack, {
   fragment as SpecialAttackFragment
@@ -8,7 +9,7 @@ import SpecialAttack, {
 const POKEMON_QUERY = gql`
   query Pokemon($name: String!) {
     pokemon(name: $name) {
-      number
+      ...Title
       height {
         ...Dimensions
       }
@@ -24,8 +25,9 @@ const POKEMON_QUERY = gql`
     }
   }
 
-  ${SpecialAttackFragment}
+  ${TitleFragment}
   ${DimensionsFragment}
+  ${SpecialAttackFragment}
 `;
 
 const Pokemon: React.FC<{ name: string }> = ({ name }) => {
@@ -36,7 +38,6 @@ const Pokemon: React.FC<{ name: string }> = ({ name }) => {
   }
 
   const {
-    number,
     height,
     weight,
     attacks: { special: specialAttacks }
@@ -46,7 +47,7 @@ const Pokemon: React.FC<{ name: string }> = ({ name }) => {
     <dl>
       <dt>Name (#)</dt>
       <dd>
-        {name} (# {number})
+        <Title {...data.pokemon} />
       </dd>
 
       <dt>height</dt>
