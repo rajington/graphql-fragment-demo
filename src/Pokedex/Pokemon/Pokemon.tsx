@@ -1,28 +1,31 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
-import Dimensions from "./Dimensions";
-import SpecialAttack from "./SpecialAttack";
+import Dimensions, { fragment as DimensionsFragment } from "./Dimensions";
+import SpecialAttack, {
+  fragment as SpecialAttackFragment
+} from "./SpecialAttack";
 
 const POKEMON_QUERY = gql`
   query Pokemon($name: String!) {
     pokemon(name: $name) {
       number
       height {
-        minimum
-        maximum
+        ...Dimensions
       }
       weight {
-        minimum
-        maximum
+        ...Dimensions
       }
       attacks {
         special {
-          name
-          type
+          name # key
+          ...SpecialAttack
         }
       }
     }
   }
+
+  ${SpecialAttackFragment}
+  ${DimensionsFragment}
 `;
 
 const Pokemon: React.FC<{ name: string }> = ({ name }) => {
@@ -48,24 +51,20 @@ const Pokemon: React.FC<{ name: string }> = ({ name }) => {
 
       <dt>height</dt>
       <dd>
-        <Dimensions minimum={height.minimum} maximum={height.maximum} />
+        <Dimensions {...height} />
       </dd>
 
       <dt>weight</dt>
       <dd>
-        <Dimensions minimum={weight.minimum} maximum={weight.maximum} />
+        <Dimensions {...weight} />
       </dd>
 
       <dt>special attacks:</dt>
       <dd>
         <ul>
           {specialAttacks.map((specialAttack: any) => (
-            <li>
-              <SpecialAttack
-                key={specialAttack.name}
-                name={specialAttack.name}
-                type={specialAttack.type}
-              />
+            <li key={specialAttack.name}>
+              <SpecialAttack {...specialAttack} />
             </li>
           ))}
         </ul>
