@@ -1,9 +1,10 @@
 import React from "react";
 import { gql, useQuery } from "@apollo/client";
+import { filter } from "graphql-anywhere";
 import Title, { fragment as TitleFragment } from "./Title";
 import Dimensions, { fragment as DimensionsFragment } from "./Dimensions";
 import SpecialAttack, {
-  fragment as SpecialAttackFragment
+  fragment as SpecialAttackFragment,
 } from "./SpecialAttack";
 
 const POKEMON_QUERY = gql`
@@ -37,35 +38,31 @@ const Pokemon: React.FC<{ name: string }> = ({ name }) => {
     return null;
   }
 
-  const {
-    height,
-    weight,
-    attacks: { special: specialAttacks }
-  } = data.pokemon;
-
   return (
     <dl>
       <dt>Name (#)</dt>
       <dd>
-        <Title {...data.pokemon} />
+        <Title {...filter(TitleFragment, data.pokemon)} />
       </dd>
 
       <dt>height</dt>
       <dd>
-        <Dimensions {...height} />
+        <Dimensions {...filter(DimensionsFragment, data.pokemon.height)} />
       </dd>
 
       <dt>weight</dt>
       <dd>
-        <Dimensions {...weight} />
+        <Dimensions {...filter(DimensionsFragment, data.pokemon.weight)} />
       </dd>
 
       <dt>special attacks:</dt>
       <dd>
         <ul>
-          {specialAttacks.map((specialAttack: any) => (
+          {data.pokemon.attacks.special.map((specialAttack: any) => (
             <li key={specialAttack.name}>
-              <SpecialAttack {...specialAttack} />
+              <SpecialAttack
+                {...filter(SpecialAttackFragment, specialAttack)}
+              />
             </li>
           ))}
         </ul>
